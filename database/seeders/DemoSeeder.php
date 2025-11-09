@@ -8,16 +8,27 @@ use App\Models\Department;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class DemoSeeder extends Seeder
 {
     public function run()
     {
-        // Ensure base department & unit exist
-        $dept = Department::firstOrCreate(['name' => 'Bursary']);
-        $unit = Unit::firstOrCreate(['name' => 'Accounts Unit']);
 
-        // Define all system roles from your eBursary plan
+        $dept = Department::firstOrCreate(
+    ['name' => 'Bursary'],
+    ['code' => strtoupper(Str::substr('Bursary', 0, 3)) . '-' . rand(100, 999)]
+);
+
+
+$unit = Unit::firstOrCreate(
+    [
+        'name' => 'Accounts Unit',
+        'department_id' => $dept->id
+    ],
+    ['code' => strtoupper(Str::substr('Accounts Unit', 0, 3)) . '-' . rand(100, 999)]
+);
+
         $roles = [
             'rector',
             'bursar',
@@ -33,7 +44,6 @@ class DemoSeeder extends Seeder
             Role::firstOrCreate(['name' => $role]);
         }
 
-        // Create demo users for each role
         $users = [
             ['System Admin', 'admin@poly.edu.ng', 'admin'],
             ['Rector User', 'rector@poly.edu.ng', 'rector'],
@@ -57,12 +67,11 @@ class DemoSeeder extends Seeder
                 ]
             );
 
-            // assign role safely (avoid duplicates)
             if (!$user->hasRole($role)) {
                 $user->syncRoles([$role]);
             }
         }
 
-        $this->command->info('✅ Demo users and roles seeded successfully.');
+        $this->command->info('Demo users and roles seeded successfully.');
     }
 }
