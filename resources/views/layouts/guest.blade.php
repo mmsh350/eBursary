@@ -10,10 +10,8 @@
 
     <title>{{ $title ?? config('app.name', 'e-Bursary') }}</title>
 
-    {{-- Tailwind CSS --}}
     <script src="https://cdn.tailwindcss.com"></script>
 
-    {{-- Favicon (optional) --}}
     <link rel="icon"
           href="{{ asset('favicon.ico') }}">
 </head>
