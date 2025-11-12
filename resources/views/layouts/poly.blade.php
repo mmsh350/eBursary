@@ -23,12 +23,15 @@
             theme: {
                 extend: {
                     colors: {
-                        emerald: {
-                            50: '#ecfdf5',
-                            100: '#d1fae5',
-                            600: '#059669',
-                            700: '#047857',
-                            800: '#065f46',
+                        bursary: {
+                            50: '#eaf1ff',
+                            100: '#d3e2ff',
+                            200: '#a8c4ff',
+                            500: '#1d4ed8',
+                            600: '#153eaa',
+                            700: '#0b2e7a',
+                            800: '#072261',
+                            900: '#04184d',
                         },
                     },
                 },
@@ -43,104 +46,108 @@
     <div class="flex min-h-screen">
 
         {{-- Sidebar --}}
-        <aside class="fixed inset-y-0 left-0 z-40 flex w-64 transform flex-col border-r bg-white shadow-md transition-transform duration-300 ease-in-out md:translate-x-0"
+        <aside class="from-bursary-900 to-bursary-700 fixed inset-y-0 left-0 z-40 flex w-64 transform flex-col border-r bg-gradient-to-b text-white shadow-lg transition-transform duration-300 ease-in-out md:translate-x-0"
                :class="{ '-translate-x-full': !sidebarOpen }">
 
             {{-- Sidebar Header --}}
-            <div class="flex flex-shrink-0 items-center justify-between border-b px-5 py-4">
+            <div class="border-bursary-700 flex flex-shrink-0 items-center justify-between border-b px-5 py-4">
                 <div class="flex items-center space-x-2">
-                    <img src="/logo.png"
+                    <img src="{{ asset('assets/images/nictm_logo2.png') }}"
                          alt="Logo"
-                         class="h-9 w-9 rounded border">
-                    <span class="text-lg font-bold text-emerald-700">e-Bursary</span>
+                         class="h-15 w-10 rounded border border-white/30">
+                    <span class="text-lg font-bold">E-Bursary</span>
                 </div>
                 <button @click="sidebarOpen = false"
-                        class="text-xl text-gray-500 md:hidden">✕</button>
+                        class="text-xl text-gray-200 md:hidden">✕</button>
             </div>
 
             {{-- Scrollable Navigation --}}
             <nav class="flex-1 overflow-y-auto p-4 text-sm">
                 <a href="{{ route('dashboard') }}"
-                   class="{{ request()->is('dashboard') ? 'bg-emerald-100 text-emerald-800 font-semibold' : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700' }} mb-1 block rounded-md px-3 py-2">
+                   class="{{ request()->is('dashboard') ? 'bg-bursary-800 text-white font-semibold' : 'text-gray-200 hover:bg-bursary-800 hover:text-white' }} mb-1 block rounded-md px-3 py-2 transition">
                     Dashboard
                 </a>
 
                 {{-- Rector --}}
                 @role('rector')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Rector</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Rector</p>
                     <a href="/reports"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Reports & Analytics</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Reports &
+                        Analytics</a>
                 @endrole
 
                 {{-- Bursar / Deputy Bursar --}}
                 @hasanyrole('bursar|deputy_bursar')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Approvals</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Approvals</p>
                     <a href="/expenditures"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Approve
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Approve
                         Expenditures</a>
                     <a href="/payment-vouchers"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Payment Vouchers</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Payment
+                        Vouchers</a>
                 @endhasanyrole
 
                 {{-- Accountant --}}
                 @role('accountant')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Accounting</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Accounting</p>
                     <a href="/revenues"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Revenues</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Revenues</a>
                     <a href="/receipts"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Receipts</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Receipts</a>
                 @endrole
 
                 {{-- Cashier --}}
                 @role('cashier')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Cash Office</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Cash Office</p>
                     <a href="/cashbook"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Cash Book</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Cash Book</a>
                 @endrole
 
                 {{-- Auditor --}}
                 @role('auditor')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Audit</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Audit</p>
                     <a href="/audit-logs"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Audit Logs</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Audit Logs</a>
                 @endrole
 
                 {{-- Dept Officer --}}
                 @role('dept_officer')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Department</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Department</p>
                     <a href="/expenditures"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Submit Expenditure
-                        Request</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Submit
+                        Expenditure Request</a>
                 @endrole
 
                 {{-- Admin --}}
                 @role('admin')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Administration</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Administration</p>
                     <a href="/users"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Users</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Users</a>
                     <a href="/departments"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Departments</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Departments</a>
                     <a href="/units"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Units</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Units</a>
                     <a href="/vendors"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Vendors</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Vendors</a>
                     <a href="{{ route('users.manage') }}"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">User Management</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">User
+                        Management</a>
                 @endrole
 
                 {{-- Shared --}}
                 @hasanyrole('admin|bursar|deputy_bursar')
-                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">Financial Control</p>
+                    <p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-300">Financial Control</p>
                     <a href="/revenues"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Revenues</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Revenues</a>
                     <a href="/revenue-sources"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Revenue Sources</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Revenue
+                        Sources</a>
                     <a href="/budgets"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Budgets</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Budgets</a>
                     <a href="/budget-heads"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Budget Heads</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Budget Heads</a>
                     <a href="/receipts"
-                       class="block rounded-md px-3 py-2 hover:bg-emerald-50 hover:text-emerald-700">Receipts</a>
+                       class="hover:bg-bursary-800 block rounded-md px-3 py-2 transition hover:text-white">Receipts</a>
                 @endhasanyrole
             </nav>
         </aside>
@@ -152,7 +159,7 @@
             <header
                     class="sticky top-0 z-30 flex items-center justify-between border-b bg-white/80 px-5 py-3 backdrop-blur">
                 <button @click="sidebarOpen = !sidebarOpen"
-                        class="text-2xl text-emerald-700 md:hidden">☰</button>
+                        class="text-bursary-700 text-2xl md:hidden">☰</button>
                 <div class="truncate font-semibold text-gray-700">{{ $title ?? 'Dashboard' }}</div>
 
                 <div class="flex items-center gap-3">
@@ -174,7 +181,7 @@
                           action="{{ route('logout') }}">
                         @csrf
                         <button
-                                class="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-700">
+                                class="bg-bursary-700 hover:bg-bursary-600 rounded-md px-3 py-1.5 text-sm font-medium text-white transition">
                             Logout
                         </button>
                     </form>
@@ -184,7 +191,7 @@
             {{-- Content --}}
             <main class="flex-1 overflow-y-auto p-6">
                 @if (session('ok'))
-                    <div class="mb-4 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800">
+                    <div class="border-bursary-200 bg-bursary-50 text-bursary-800 mb-4 rounded-md border p-3 text-sm">
                         {{ session('ok') }}
                     </div>
                 @endif
@@ -197,7 +204,6 @@
 
                 {{ $slot ?? '' }}
                 @yield('content')
-
             </main>
         </div>
     </div>
