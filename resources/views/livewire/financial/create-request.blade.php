@@ -59,10 +59,9 @@
                         Type</label>
                     <div class="mt-2">
                         <x-select-input wire:model.live="type" id="type">
-                            <option value="expenditure">Expenditure</option>
-                            <option value="advance">Staff Advance</option>
-                            <option value="claim">Claim / Reimbursement</option>
-                            <option value="project">Project Capital</option>
+                            @foreach ($requestTypes as $reqType)
+                                <option value="{{ $reqType->code }}">{{ $reqType->name }}</option>
+                            @endforeach
                         </x-select-input>
                     </div>
                 </div>
@@ -70,8 +69,14 @@
                 <div class="sm:col-span-3">
                     <label for="required_date" class="block text-sm font-semibold leading-6 text-gray-900">Required
                         Date</label>
-                    <div class="mt-2">
-                        <x-text-input type="date" wire:model="required_date" id="required_date" />
+                    <div class="mt-2 relative rounded-md shadow-sm">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <x-text-input type="date" wire:model="required_date" id="required_date" class="pl-10" />
                     </div>
                     @error('required_date')
                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -84,9 +89,17 @@
                             class="block text-sm font-semibold leading-6 text-blue-900">Expected Retirement Date
                             (Deadline)</label>
                         <p class="text-xs text-blue-700 mb-2">When do you expect to account for these funds?</p>
-                        <div class="mt-2">
+                        <div class="mt-2 relative rounded-md shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
                             <x-text-input type="date" wire:model="expected_retirement_date"
-                                id="expected_retirement_date" />
+                                id="expected_retirement_date"
+                                class="pl-10 border-blue-300 focus:border-blue-500 focus:ring-blue-500" />
                         </div>
                         @error('expected_retirement_date')
                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -104,9 +117,6 @@
                     <div class="mt-2">
                         <x-select-input wire:model="currency" id="currency">
                             <option value="NGN">NGN (Naira)</option>
-                            <option value="USD">USD (Dollar)</option>
-                            <option value="GBP">GBP (Pounds)</option>
-                            <option value="EUR">EUR (Euro)</option>
                         </x-select-input>
                     </div>
                     @error('currency')
@@ -116,12 +126,12 @@
 
                 <div class="sm:col-span-4">
                     <label for="amount" class="block text-sm font-semibold leading-6 text-gray-900">Amount</label>
-                    <div class="mt-2 relative rounded-md shadow">
+                    <div class="mt-2 relative rounded-md shadow-sm">
                         <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <span class="text-gray-500 sm:text-sm">&#8358;</span>
+                            <span class="text-gray-500 sm:text-sm font-bold">&#8358;</span>
                         </div>
-                        <x-text-input type="number" step="0.01" wire:model="amount" id="amount" class="pl-7"
-                            placeholder="0.00" />
+                        <x-text-input type="number" step="0.01" wire:model="amount" id="amount"
+                            class="pl-8 font-semibold text-lg" placeholder="0.00" />
                     </div>
                     @error('amount')
                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -148,19 +158,65 @@
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="budget_head_id" class="block text-sm font-semibold leading-6 text-gray-900">Budget Head
-                        (Vote)</label>
-                    <div class="mt-2">
-                        <x-select-input wire:model="budget_head_id" id="budget_head_id">
-                            <option value="">Select Budget Head</option>
-                            @foreach ($budgetHeads as $head)
-                                <option value="{{ $head->id }}">{{ $head->name ?? $head->code }}</option>
-                            @endforeach
-                        </x-select-input>
+                    <label for="attachments" class="block text-sm font-semibold leading-6 text-gray-900">Attachments
+                        (Optional)</label>
+                    <div
+                        class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer relative">
+                        <div class="text-center">
+                            <svg class="mx-auto h-10 w-10 text-gray-300" viewBox="0 0 24 24" fill="currentColor"
+                                aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <div class="mt-2 flex text-sm leading-6 text-gray-600 justify-center">
+                                <label for="attachments"
+                                    class="relative cursor-pointer rounded-md bg-white font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500">
+                                    <span>Upload files</span>
+                                    <input id="attachments" wire:model="attachments" type="file" multiple
+                                        class="sr-only">
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs leading-5 text-gray-600">PDF, PNG, JPG up to 10MB</p>
+                        </div>
                     </div>
-                    @error('budget_head_id')
+                    @error('attachments.*')
                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                     @enderror
+
+                    <!-- Previews -->
+                    @if ($attachments)
+                        <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                            @foreach ($attachments as $file)
+                                <div class="relative group rounded-lg overflow-hidden border border-gray-200">
+                                    @if (in_array($file->getMimeType(), ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp']))
+                                        <img src="{{ $file->temporaryUrl() }}" class="h-24 w-full object-cover"
+                                            alt="Preview">
+                                    @else
+                                        <div class="h-24 w-full bg-gray-50 flex items-center justify-center">
+                                            <svg class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                    @endif
+                                    <div class="bg-white p-2 text-xs text-gray-700 truncate">
+                                        {{ $file->getClientOriginalName() }}
+                                    </div>
+                                    <button type="button" wire:click="removeAttachment({{ $loop->index }})"
+                                        class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -170,8 +226,14 @@
             <div>
                 <label for="purpose" class="block text-sm font-semibold leading-6 text-gray-900">Purpose
                     (Title)</label>
-                <div class="mt-2">
-                    <x-text-input type="text" wire:model="purpose" id="purpose"
+                <div class="mt-2 relative rounded-md shadow-sm">
+                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </div>
+                    <x-text-input type="text" wire:model="purpose" id="purpose" class="pl-10"
                         placeholder="e.g. Purchase of Office Supplies" />
                 </div>
                 @error('purpose')
@@ -184,7 +246,8 @@
                     Description / Justification</label>
                 <div class="mt-2">
                     <textarea wire:model="description" id="description" rows="4"
-                        class="block w-full rounded-md border-gray-400 shadow focus:border-blue-600 focus:ring-blue-600 sm:text-sm py-2.5 px-3 text-gray-900"></textarea>
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm py-3 px-4 text-gray-900"
+                        placeholder="Provide a detailed explanation..."></textarea>
                 </div>
                 @error('description')
                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -192,28 +255,60 @@
             </div>
 
             <!-- Payment Info -->
-            <div class="bg-gray-50 rounded-lg p-6">
-                <h4 class="text-sm font-semibold text-gray-900 mb-4">Payment Details (Beneficiary)</h4>
+            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    <h4 class="text-sm font-bold text-gray-900">Payment Details (Beneficiary)</h4>
+                </div>
+
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div class="sm:col-span-2">
                         <label for="bank_name" class="block text-sm font-medium leading-6 text-gray-900">Bank
                             Name</label>
-                        <div class="mt-2">
-                            <x-text-input type="text" wire:model="bank_name" id="bank_name" />
+                        <div class="mt-2 relative rounded-md shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                            </div>
+                            <x-text-input type="text" wire:model="bank_name" id="bank_name" class="pl-9"
+                                placeholder="Bank Name" />
                         </div>
                     </div>
                     <div class="sm:col-span-2">
                         <label for="account_number" class="block text-sm font-medium leading-6 text-gray-900">Account
                             Number</label>
-                        <div class="mt-2">
-                            <x-text-input type="text" wire:model="account_number" id="account_number" />
+                        <div class="mt-2 relative rounded-md shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                                </svg>
+                            </div>
+                            <x-text-input type="text" wire:model="account_number" id="account_number"
+                                class="pl-9" placeholder="0123456789" />
                         </div>
                     </div>
                     <div class="sm:col-span-2">
                         <label for="account_name" class="block text-sm font-medium leading-6 text-gray-900">Account
                             Name</label>
-                        <div class="mt-2">
-                            <x-text-input type="text" wire:model="account_name" id="account_name" />
+                        <div class="mt-2 relative rounded-md shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <x-text-input type="text" wire:model="account_name" id="account_name" class="pl-9"
+                                placeholder="Account Name" />
                         </div>
                     </div>
                 </div>
@@ -221,9 +316,7 @@
 
             <div class="flex items-center justify-end gap-x-6 border-t border-gray-100 pt-8">
                 <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancel</button>
-                <button type="button" wire:click="saveDraft"
-                    class="rounded-lg bg-gray-600 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 transition-all">Save
-                    as Draft</button>
+
                 <button type="submit"
                     class="rounded-lg bg-blue-900 px-8 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all">Submit
                     Request</button>

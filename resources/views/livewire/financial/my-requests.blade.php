@@ -25,7 +25,6 @@
         <div class="w-full sm:w-48">
             <x-select-input wire:model.live="filterStatus">
                 <option value="">All Statuses</option>
-                <option value="DRAFT">Draft</option>
                 <option value="SUBMITTED">Submitted</option>
                 <option value="PENDING_RECTOR">Pending Rector</option>
                 <option value="PENDING_BURSAR">Pending Bursar</option>

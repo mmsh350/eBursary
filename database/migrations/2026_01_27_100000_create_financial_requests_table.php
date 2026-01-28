@@ -21,7 +21,6 @@ return new class extends Migration
             $table->longText('description')->nullable();
 
             $table->foreignId('department_id')->constrained();
-            $table->foreignId('budget_head_id')->constrained();
 
             $table->date('required_date');
             $table->date('expected_retirement_date')->nullable();

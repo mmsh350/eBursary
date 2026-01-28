@@ -19,7 +19,6 @@ class DemoSeeder extends Seeder
             ['code' => 'BURSARY-' . rand(100, 999)]
         );
 
-
         $unit = Unit::firstOrCreate(
             [
                 'name' => 'Accounts Unit',
@@ -46,6 +45,17 @@ class DemoSeeder extends Seeder
             );
         }
 
-        $this->command->info('Demo users seeded successfully (Simplified Roles).');
+        $types = [
+            ['name' => 'Expenditure', 'code' => 'expenditure', 'description' => 'General expenses'],
+            ['name' => 'Staff Advance', 'code' => 'advance', 'description' => 'Advance payment to be retired'],
+            ['name' => 'Claim / Reimbursement', 'code' => 'claim', 'description' => 'Refund for spent funds'],
+            ['name' => 'Project Capital', 'code' => 'project', 'description' => 'Large capital projects'],
+        ];
+
+        foreach ($types as $type) {
+            \App\Models\RequestType::firstOrCreate(['code' => $type['code']], $type);
+        }
+
+        $this->command->info('Request types seeded.');
     }
 }

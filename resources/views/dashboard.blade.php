@@ -233,7 +233,7 @@
                                 {{ match ($req->status) {
                                     'APPROVED_FOR_PAYMENT', 'PAID' => 'bg-green-100 text-green-800',
                                     'REJECTED_BY_RECTOR', 'REJECTED_BY_BURSAR' => 'bg-red-100 text-red-800',
-                                    'DRAFT' => 'bg-gray-100 text-gray-800',
+
                                     default => 'bg-yellow-100 text-yellow-800',
                                 } }}">
                                     {{ str_replace('_', ' ', $req->status) }}

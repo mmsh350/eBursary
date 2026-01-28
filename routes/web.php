@@ -5,7 +5,6 @@ use App\Livewire\Financial\CreateRequest;
 use App\Http\Controllers\DashboardController;
 use App\Livewire\Admin\ManageDepartments;
 use App\Livewire\Admin\ManageUnits;
-use App\Livewire\Admin\ManageVendors;
 use App\Livewire\Financial\MyRequests;
 use App\Livewire\Financial\PendingApprovals;
 use App\Livewire\Financial\ViewRequest;
@@ -33,6 +32,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users', ManageUsers::class)->name('users.index');
         Route::get('/departments', ManageDepartments::class)->name('departments.index');
         Route::get('/units', ManageUnits::class)->name('units.index');
-        Route::get('/vendors', ManageVendors::class)->name('vendors.index');
+        Route::get('/request-types', \App\Livewire\Admin\ManageRequestTypes::class)->name('request-types.index'); // New
     });
 });
