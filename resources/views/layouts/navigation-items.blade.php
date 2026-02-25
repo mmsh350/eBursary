@@ -38,8 +38,8 @@
 </li>
 
 @if (auth()->user()?->hasRole('rector') ||
+        auth()->user()?->hasRole('audit') ||
         auth()->user()?->hasRole('bursar') ||
-        auth()->user()?->hasRole('finance') ||
         auth()->user()?->hasRole('cashier'))
     <li>
         <div class="text-xs font-semibold leading-6 text-blue-200 uppercase tracking-wider mt-6 mb-2">Approvals</div>

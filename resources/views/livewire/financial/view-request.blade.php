@@ -153,10 +153,12 @@
             <!-- Approval Actions (Only Visible if actionable) -->
             @php
                 $canApproveRector = auth()->user()->can('approveAsRector', $financialRequest);
+                $canVerifyAudit = auth()->user()->can('verifyAsAudit', $financialRequest);
+                $canApproveRectorFinal = auth()->user()->can('approveAsRectorFinal', $financialRequest);
                 $canApproveBursar = auth()->user()->can('approveAsBursar', $financialRequest);
-                $canProcessFinance = auth()->user()->can('processAsFinance', $financialRequest);
                 $canPay = auth()->user()->can('pay', $financialRequest);
-                $isActionable = $canApproveRector || $canApproveBursar || $canProcessFinance || $canPay;
+                $isActionable =
+                    $canApproveRector || $canVerifyAudit || $canApproveRectorFinal || $canApproveBursar || $canPay;
             @endphp
 
             @if ($isActionable)
@@ -173,28 +175,45 @@
                         </h3>
                     </div>
                     <div class="p-6">
-                        <textarea wire:model="comment" rows="3"
-                            class="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 mb-6"
-                            placeholder="Enter comments, approval notes, or reason for rejection..."></textarea>
-                        @error('comment')
-                            <p class="text-red-600 text-sm mb-4 font-medium flex items-center">
-                                <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                {{ $message }}
-                            </p>
-                        @enderror
+                        <div class="mb-6">
+                            <textarea wire:model="comment" rows="3"
+                                class="block w-full rounded-xl border-0 py-4 px-6  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2   text-lg leading-relaxed bg-gray-50/30"
+                                placeholder="Enter your verification notes or comments here..." spellcheck="false"></textarea>
+                            @error('comment')
+                                <p class="mt-2 text-red-600 text-sm font-medium flex items-center">
+                                    <svg class="h-4 w-4 mr-1.5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
 
                         <div class="flex flex-wrap gap-3">
                             @if ($canApproveRector)
                                 <button wire:click="approveRector"
                                     class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-                                    Approved by Rector
+                                    Approve and Send to Audit
                                 </button>
                                 <button wire:click="rejectRector"
                                     class="inline-flex items-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-50">
                                     Reject Request
+                                </button>
+                            @endif
+
+                            @if ($canVerifyAudit)
+                                <button wire:click="verifyAudit"
+                                    class="inline-flex items-center rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500">
+                                    Verify Price (Audit)
+                                </button>
+                            @endif
+
+                            @if ($canApproveRectorFinal)
+                                <button wire:click="approveRectorFinal"
+                                    class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500">
+                                    Final Approval (Rector)
                                 </button>
                             @endif
 
@@ -205,12 +224,6 @@
                                 </button>
                             @endif
 
-                            @if ($canProcessFinance)
-                                <button wire:click="processFinance"
-                                    class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                                    Mark Ready for Payment
-                                </button>
-                            @endif
 
                             @if ($canPay)
                                 <button wire:click="recordPayment"
@@ -252,9 +265,9 @@
                                                 <span
                                                     class="h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white
                                                     {{ match ($log->action) {
-                                                        'APPROVED', 'APPROVED_FOR_PAYMENT', 'PAID' => 'bg-green-500',
+                                                        'APPROVED', 'APPROVED_FOR_PAYMENT', 'PAID', 'FINAL_APPROVED', 'APPROVED_BY_BURSAR' => 'bg-green-500',
                                                         'REJECTED', 'ON_HOLD', 'RETURNED' => 'bg-red-500 top-1',
-                                                        'SUBMITTED' => 'bg-blue-500',
+                                                        'SUBMITTED', 'SUBMITTED_TO_AUDIT', 'AUDIT_VERIFIED' => 'bg-blue-500',
                                                         default => 'bg-gray-400',
                                                     } }}">
                                                     @if ($log->action == 'APPROVED' || $log->action == 'PAID' || $log->action == 'APPROVED_FOR_PAYMENT')
@@ -288,7 +301,7 @@
 
                                                     @if ($log->comment)
                                                         <div
-                                                            class="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded border border-gray-100 italic">
+                                                            class="mt-2 text-sm text-gray-700 bg-gray-50 p-2.5 rounded-lg border border-gray-200 italic leading-relaxed">
                                                             "{{ $log->comment }}"
                                                         </div>
                                                     @endif
