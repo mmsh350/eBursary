@@ -56,9 +56,19 @@
             Pending Approval
             @if (isset($pendingApprovalsCount) && $pendingApprovalsCount > 0)
                 <span
-                    class="ml-auto w-6 min-w-max whitespace-nowrap rounded-full bg-blue-600 px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-white ring-1 ring-inset ring-blue-500"
+                    class="ml-auto w-6 min-max whitespace-nowrap rounded-full bg-blue-600 px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-white ring-1 ring-inset ring-blue-500"
                     aria-hidden="true">{{ $pendingApprovalsCount }}</span>
             @endif
+        </a>
+    <li>
+        <a href="{{ route('requests.completed') }}"
+            class="{{ request()->routeIs('requests.completed') ? 'bg-blue-800 text-white' : 'text-blue-100 hover:text-white hover:bg-blue-800' }} group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold transition-all duration-200">
+            <svg class="h-6 w-6 shrink-0 {{ request()->routeIs('requests.completed') ? 'text-white' : 'text-blue-200 group-hover:text-white' }}"
+                fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Completed Requests
         </a>
     </li>
 @endif

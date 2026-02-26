@@ -5,6 +5,7 @@ use App\Livewire\Financial\CreateRequest;
 use App\Http\Controllers\DashboardController;
 use App\Livewire\Admin\ManageDepartments;
 use App\Livewire\Admin\ManageUnits;
+use App\Livewire\Financial\CompletedRequests;
 use App\Livewire\Financial\MyRequests;
 use App\Livewire\Financial\PendingApprovals;
 use App\Livewire\Financial\ViewRequest;
@@ -26,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/requests/create', CreateRequest::class)->name('requests.create');
     Route::get('/requests', MyRequests::class)->name('requests.index');
     Route::get('/approvals', PendingApprovals::class)->name('approvals.index');
+    Route::get('/completed', CompletedRequests::class)->name('requests.completed');
     Route::get('/requests/{request}', ViewRequest::class)->name('requests.show');
 
     Route::middleware(['role:admin'])->group(function () {

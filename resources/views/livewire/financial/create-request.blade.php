@@ -307,8 +307,8 @@
                                         d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                                 </svg>
                             </div>
-                            <x-text-input type="text" wire:model="account_number" id="account_number"
-                                class="pl-9" placeholder="0123456789" />
+                            <x-text-input maxlength="10" type="text" wire:model="account_number"
+                                id="account_number" class="pl-9" placeholder="0123456789" />
                         </div>
                     </div>
                     <div class="sm:col-span-2">

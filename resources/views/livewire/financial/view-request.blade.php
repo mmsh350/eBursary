@@ -192,14 +192,15 @@
                         </div>
 
                         <div class="flex flex-wrap gap-3">
+                            @php
+                                $canRejectRector = auth()->user()->can('rejectAsRector', $financialRequest);
+                                $canRejectBursar = auth()->user()->can('rejectAsBursar', $financialRequest);
+                            @endphp
+
                             @if ($canApproveRector)
                                 <button wire:click="approveRector"
                                     class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                                     Approve and Send to Audit
-                                </button>
-                                <button wire:click="rejectRector"
-                                    class="inline-flex items-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-50">
-                                    Reject Request
                                 </button>
                             @endif
 
@@ -221,6 +222,13 @@
                                 <button wire:click="approveBursar"
                                     class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
                                     Approved by Bursar
+                                </button>
+                            @endif
+
+                            @if ($canRejectRector)
+                                <button wire:click="rejectRector"
+                                    class="inline-flex items-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-50">
+                                    Reject Request
                                 </button>
                             @endif
 

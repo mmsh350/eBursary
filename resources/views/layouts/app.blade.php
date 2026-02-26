@@ -128,8 +128,15 @@
                     </h2>
                 </div>
                 <div class="flex items-center gap-x-4 lg:gap-x-6">
-                    <!-- Notifications placeholder -->
-                    <button type="button" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 relative">
+                    <!-- Notifications -->
+                    @php
+                        $notificationUrl = auth()
+                            ->user()
+                            ->hasAnyRole(['rector', 'bursar', 'finance', 'audit', 'cashier'])
+                            ? route('approvals.index')
+                            : route('requests.index');
+                    @endphp
+                    <a href="{{ $notificationUrl }}" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 relative">
                         <span class="sr-only">View notifications</span>
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" aria-hidden="true">
@@ -137,16 +144,16 @@
                                 d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                         </svg>
                         @if (isset($pendingApprovalsCount) && $pendingApprovalsCount > 0)
-                            <span class="absolute top-1 right-1 flex h-4 w-4">
+                            <span class="absolute top-1.5 right-1.5 flex h-4 w-4">
                                 <span
                                     class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                                 <span
                                     class="relative inline-flex rounded-full h-4 w-4 bg-red-500 text-[10px] text-white font-bold items-center justify-center">
-                                    {{ $pendingApprovalsCount }}
+                                    {{ $pendingApprovalsCount > 9 ? '9+' : $pendingApprovalsCount }}
                                 </span>
                             </span>
                         @endif
-                    </button>
+                    </a>
 
                     <!-- Profile dropdown -->
                     <div class="relative" x-data="{ open: false }">
