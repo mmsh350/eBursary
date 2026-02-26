@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\Unit;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 
 class DemoSeeder extends Seeder
@@ -16,47 +15,24 @@ class DemoSeeder extends Seeder
     {
 
         $dept = Department::firstOrCreate(
-    ['name' => 'Bursary'],
-    ['code' => strtoupper(Str::substr('Bursary', 0, 3)) . '-' . rand(100, 999)]
-);
+            ['name' => 'Bursary'],
+            ['code' => 'BURSARY-' . rand(100, 999)]
+        );
 
-
-$unit = Unit::firstOrCreate(
-    [
-        'name' => 'Accounts Unit',
-        'department_id' => $dept->id
-    ],
-    ['code' => strtoupper(Str::substr('Accounts Unit', 0, 3)) . '-' . rand(100, 999)]
-);
-
-        $roles = [
-            'rector',
-            'bursar',
-            'deputy_bursar',
-            'accountant',
-            'cashier',
-            'auditor',
-            'dept_officer',
-            'admin',
-        ];
-
-        foreach ($roles as $role) {
-            Role::firstOrCreate(['name' => $role]);
-        }
+        $unit = Unit::firstOrCreate(
+            [
+                'name' => 'Accounts Unit',
+                'department_id' => $dept->id
+            ],
+            ['code' => 'ACC-' . rand(100, 999)]
+        );
 
         $users = [
-            ['System Admin', 'admin@poly.edu.ng', 'admin'],
-            ['Rector User', 'rector@poly.edu.ng', 'rector'],
-            ['Bursar User', 'bursar@poly.edu.ng', 'bursar'],
-            ['Deputy Bursar User', 'deputy@poly.edu.ng', 'deputy_bursar'],
-            ['Accountant User', 'accountant@poly.edu.ng', 'accountant'],
-            ['Cashier User', 'cashier@poly.edu.ng', 'cashier'],
-            ['Auditor User', 'auditor@poly.edu.ng', 'auditor'],
-            ['Dept Officer', 'officer@poly.edu.ng', 'dept_officer'],
+            ['System Admin', 'admin@poly.edu.ng', 'admin']
         ];
 
         foreach ($users as [$name, $email, $role]) {
-            $user = User::firstOrCreate(
+            User::firstOrCreate(
                 ['email' => $email],
                 [
                     'name' => $name,
@@ -64,14 +40,22 @@ $unit = Unit::firstOrCreate(
                     'department_id' => $dept->id,
                     'unit_id' => $unit->id,
                     'is_active' => true,
+                    'role' => $role,
                 ]
             );
-
-            if (!$user->hasRole($role)) {
-                $user->syncRoles([$role]);
-            }
         }
 
-        $this->command->info('Demo users and roles seeded successfully.');
+        $types = [
+            ['name' => 'Expenditure', 'code' => 'expenditure', 'description' => 'General expenses'],
+            ['name' => 'Staff Advance', 'code' => 'advance', 'description' => 'Advance payment to be retired'],
+            ['name' => 'Claim / Reimbursement', 'code' => 'claim', 'description' => 'Refund for spent funds'],
+            ['name' => 'Project Capital', 'code' => 'project', 'description' => 'Large capital projects'],
+        ];
+
+        foreach ($types as $type) {
+            \App\Models\RequestType::firstOrCreate(['code' => $type['code']], $type);
+        }
+
+        $this->command->info('Request types seeded.');
     }
 }

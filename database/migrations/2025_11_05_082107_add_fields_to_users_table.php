@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_active')->default(true)->after('password');
+            $table->string('role')->default('user')->after('is_active');
             $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete();
         });
